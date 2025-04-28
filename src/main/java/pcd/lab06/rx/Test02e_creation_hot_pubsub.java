@@ -8,8 +8,6 @@ public class Test02e_creation_hot_pubsub {
 
 		System.out.println("\n=== TEST Hot streams with pubsub ===\n");
 
-		/* Subjects: bridges functioning both as observer and observable */ 
-
 		PublishSubject<Integer> source = PublishSubject.<Integer>create();
 		 
 		log("subscribing.");
@@ -21,17 +19,15 @@ public class Test02e_creation_hot_pubsub {
 		log("generating.");
 
 		new Thread(() -> {
-				int i = 0;
-				while (i < 100){
-					try {
-						log("source: "+i); 
-						source.onNext(i);
-						Thread.sleep(10);
-						i++;
-					} catch (Exception ex){}
+			for (int i = 0; i < 100; i++) {
+				log("source: " + i);
+				source.onNext(i);
+				try {
+					Thread.sleep(10);
+				} catch (Exception ex) {
 				}
-			}).start();
-		
+			}
+		}).start();
 
 		log("waiting.");
 

@@ -4,41 +4,40 @@ import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.flowables.ConnectableFlowable;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
 
+//creazione di un flusso "hot" e utilizzo tramite un thread separato creato in modo esplicito
 public class Test02d_creation_hot {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("\n=== TEST Hot streams  ===\n");
+		System.out.println("\n=== TEST Hot streams ===\n");
 		
-		Observable<Integer> source = Observable.create(emitter -> {		     
+		Observable<Integer> source = Observable.create(emitter -> {
 			new Thread(() -> {
-				int i = 0;
-				while (i < 200){
+				for (int i = 0; i < 200; i++) {
+					log("source: " + i);
+					emitter.onNext(i);
 					try {
-						log("source: "+i); 
-						emitter.onNext(i);
 						Thread.sleep(10);
-						i++;
-					} catch (Exception ex){}
+					} catch (InterruptedException e) {
+						throw new RuntimeException(e);
+					}
 				}
+				emitter.onComplete();
 			}).start();
-		     //emitter.setCancellable(c::close);
-		 });
-		
+		});
+
+		//rendo il flusso "hot", ovvero lo creo prima ancora che possa essere eseguito subscribe su di esso
 		ConnectableObservable<Integer> hotObservable = source.publish();
 		hotObservable.connect();
 	
-		/* give time for producing some data before any subscription */
 		Thread.sleep(500);
 		
 		log("Subscribing A.");
 		
-		hotObservable.subscribe((s) -> {
-			log("subscriber A: "+s);
-			// Thread.sleep(5000);
-		});	
+		hotObservable.subscribe((s) -> { //osservo gli elementi del flusso già in esecuzione
+			log("subscriber A: "+s); //in particolare, sono stampati solo gli elementi generati a partire dal momento in cui viene eseguito subscribe
+		});
 		
-		/* give time for producing some data before second subscriber */
 		Thread.sleep(500);
 		
 		log("Subscribing B.");
