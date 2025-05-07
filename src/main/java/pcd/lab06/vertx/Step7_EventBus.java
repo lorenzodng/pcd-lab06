@@ -40,7 +40,7 @@ public class Step7_EventBus {
 	static final String TOPIC_NAME = "my-topic";
 
 	public static void main(String[] args) {
-		Vertx  vertx = Vertx.vertx();
+		Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new MyAgent1(), res -> {
 			/* deploy the second verticle only when the first has completed */
 			vertx.deployVerticle(new MyAgent2());

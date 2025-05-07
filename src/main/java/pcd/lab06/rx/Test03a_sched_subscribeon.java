@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-//utilizzo di un flusso cold tramite un pool di thread seperati
+//utilizzo di un flusso cold tramite un pool di thread separati
 public class Test03a_sched_subscribeon {
 
 	public static void main(String[] args) throws Exception {

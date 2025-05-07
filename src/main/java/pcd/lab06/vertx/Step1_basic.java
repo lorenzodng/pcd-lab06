@@ -22,7 +22,7 @@ public class Step1_basic {
 		
 		Future<Buffer> fut = fs.readFile("README.md"); //definisco una promise, restituita una volta che il file è stato letto, ed eseguo l'operazione di lettura. In particolare, trattandosi di un'operazione bloccante, l'operazione viene automaticamente delegata a un worker thread (readFile: invocata dal thread main -> delegata dal thread event loop -> eseguita dal worker thread).
 
-		fut.onComplete((AsyncResult<Buffer> res) -> { //configuro la promise in modo che, quando è stata completata l'operazione di lettura, eseguo la stampa dei risultati (onComplete corrisponde a then di JavaScript, e viene eseguito sia in caso di successo che di errore delle operazioni per cui le promises sono restituite) (eseguito dal thread event loop)
+		fut.onComplete((AsyncResult<Buffer> res) -> { //configuro la promise in modo che, quando è stata completata l'operazione di lettura, eseguo la stampa dei risultati (onComplete corrisponde a then di JavaScript, e viene eseguito sia in caso di successo che di errore delle operazioni per cui le promises sono restituite) (eseguito dal thread event loop perchè è una callback)
 			log("README \n" + res.result().toString().substring(0,160)); //stampo i primi 160 caratteri del risultato (res "capisce" di dover restituire i risultati del file perchè è un parametro della promise ottenuta come operazione di lettura su quel file) (eseguito dal thread event loop)
 		});
 
